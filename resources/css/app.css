@@ -1,3 +1,191 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+/*@font-face {*/
+/*    font-family: "RobotoMedium";*/
+/*    src: url('/fonts/Roboto-Medium.ttf') format('truetype');*/
+/*    font-style: normal;*/
+/*    font-weight: normal;*/
+/*}*/
+
+html,
+body {
+    height: 100%;
+}
+
+body, .min-h-screen {
+    font-family: 'Roboto', sans-serif;
+    background-color: #D1E8E2 !important;
+}
+
+.home-page {
+    display: flex;
+    align-items: center;
+    padding-top: 100px;
+    padding-bottom: 40px;
+}
+
+.home-page .block-game {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    text-align: center;
+
+    width: 480px;
+    height: 375px;
+    padding: 35px;
+    margin: auto;
+}
+
+.home-page h1 {
+    position: relative;
+    width: 404px;
+    height: 75px;
+
+    font-family: 'Roboto', sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 64px;
+    line-height: 75px;
+    margin-bottom: 90px;
+
+    color: #55585E;
+}
+
+.home-page .block-game .btn-find, .home-page .block-game .btn-list {
+    border-radius: 5px;
+    background-color: #12B0D2;
+    border-color: #12B0D2;
+    width: 374px;
+}
+
+.home-page .block-game .btn-find:active, .home-page .block-game .btn-list:active {
+    color: #fff;
+    background-color: #0e94b0;
+    border-color: #0e94b0;
+}
+
+.log_reg {
+    display: flex;
+    font-family: 'Roboto';
+}
+
+.log_reg .delim {
+    margin: 0 12px;
+}
+
+.log, .reg, .delim {
+    /* font-family: Roboto; */
+    font-size: 24px;
+    text-transform: uppercase;
+    color: #4E7992;
+    font-weight: bold;
+}
+
+.log_reg .reg {
+    color: #4E7992;
+}
+
+.log_reg .active > a {
+    color: #4E7992;
+}
+.log_reg .active > a:hover, .log_reg .active > a:active {
+    color: #5f95b9;
+}
+
+.log_reg .in_active > a  {
+    color: #768EB0;
+}
+.log_reg .in_active > a:hover, .log_reg .in_active > a:active {
+    color: #8aa8d3;
+}
+
+.block-auth {
+    width: 374px;
+    margin: auto;
+}
+
+.btn-sign-in {
+    margin: auto;
+    width: 100%;
+
+    color: #fff;
+    background-color: #12B0D2;
+    border-color: #12B0D2;
+}
+
+.btn-sign-in:hover, .btn-sign-in:active {
+    color: #fff;
+    background-color: #0696b6 !important;
+    border-color: #0696b6 !important;
+}
+
+[type='checkbox'], [type='radio'] {
+    color: #12b0d2 !important;
+}
+
+[type='checkbox']:checked, [type='radio']:checked {
+    --tw-ring-color: #1e98ab69;
+}
+
+input::placeholder {
+    color: #ACB2BD;
+    opacity: 1;
+}
+
+.label_email, .label_pass {
+    font-size: 1.05rem;
+}
+
+.block-footer {
+    text-align: center;
+}
+
+.block-footer a {
+    color: #12B0D2;
+    font-size: 16px;
+    margin-left: 5px;
+}
+.block-helper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.block-footer .quest {
+    font-size: 16px;
+    color: #55585E;
+}
+
+
+
+
+
+.form .checkbox {
+    font-weight: 400;
+}
+.form .form-control {
+    position: relative;
+    box-sizing: border-box;
+    height: auto;
+    padding: 10px;
+    font-size: 16px;
+}
+.form .form-control:focus {
+    z-index: 2;
+}
+.form input[type="email"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.form input[type="password"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
