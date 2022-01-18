@@ -20,7 +20,9 @@ body, .min-h-screen {
     font-family: 'Roboto', sans-serif;
     background-color: #D1E8E2 !important;
 }
-
+.navbar-collapse {
+    justify-content: right;
+}
 .home-page {
     display: flex;
     align-items: center;
