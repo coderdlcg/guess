@@ -41,20 +41,6 @@
                          required autocomplete="current-password" />
             </div>
 
-            <div class="block block-helper mt-4">
-                <label for="remember_me" class="items-center">
-                    <input id="remember_me" type="checkbox" class="rounded border-gray-300" name="remember">
-                    <span class="ml-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-                </label>
-                <label for="forgot">
-                    @if (Route::has('password.request'))
-                        <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('password.request') }}">
-                            {{ __('Forgot your password?') }}
-                        </a>
-                    @endif
-                </label>
-            </div>
-
             <div class="flex items-center justify-end mt-4">
                 <x-button class="btn-sign-in ">
                     {{ __('Sign in') }}

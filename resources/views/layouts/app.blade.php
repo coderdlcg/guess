@@ -14,9 +14,7 @@
     </head>
     <body>
         <div class="app container-lg">
-            <header>
-                @include('layouts.navigation')
-            </header>
+
 
             <main>
                 {{ $slot }}

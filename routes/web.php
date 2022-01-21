@@ -17,8 +17,11 @@ use App\Http\Controllers\PageController;
 Route::get('/', [PageController::class, 'index'])
     ->name('home');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+Route::get('/game', [PageController::class, 'game'])
+    ->name('game');
+
+Route::get('/history', [PageController::class, 'history'])
+    ->name('history');
+
 
 require __DIR__.'/auth.php';

@@ -7,7 +7,7 @@
         <ul class="navbar-nav">
             <li class="nav-item dropdown">
                 @auth
-                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">{{ Auth::user()->name }}</a>
+                    <a class="nav-link user_name dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">{{ Auth::user()->name }}</a>
                 @else
                     <a href="{{ route('login') }}" class="nav-link">Авторизация</a>
 
@@ -17,6 +17,7 @@
                 @endauth
                 <div class="dropdown-menu">
                     <a class="dropdown-item" href="{{ route('home') }}">Home</a>
+                    <a class="dropdown-item" href="{{ route('game') }}">Game</a>
                     <div class="dropdown-divider"></div>
 
                     <form method="POST" action="{{ route('logout') }}">
