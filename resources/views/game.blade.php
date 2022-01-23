@@ -15,43 +15,8 @@
             </div>
         </div>
         <div class="game-info col-6">
-            <div class="table-round">
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th scope="col">Ход</th>
-                        <th scope="col">Компьютер</th>
-                        <th scope="col">Том</th>
-                        <th scope="col">Bob</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>12</td>
-                        <td class="success">10</td>
-                        <td class="failed">16</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>16</td>
-                        <td class="normal">12</td>
-                        <td class="normal">12</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="footer">
-                <div class="row">
-                    <div class="col">
-                        <input class="form-control input_number" type="text" placeholder="Введите число" name="number">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col mt20">
-                        <button class="btn btn-lg btn-primary btn-block btn-send_number" name="send_number" type="submit">Угадать</button>
-                    </div>
-                </div>
+            <div id="app">
+                <game-component></game-component>
             </div>
         </div>
         <div class="right-player col-3">
