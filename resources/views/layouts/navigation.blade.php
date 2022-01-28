@@ -17,7 +17,6 @@
                 @endauth
                 <div class="dropdown-menu">
                     <a class="dropdown-item" href="{{ route('home') }}">Home</a>
-                    <a class="dropdown-item" href="{{ route('game') }}">Game</a>
                     <div class="dropdown-divider"></div>
 
                     <form method="POST" action="{{ route('logout') }}">

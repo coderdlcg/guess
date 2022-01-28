@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\GameController;
 use App\Http\Controllers\PageController;
 
 /*
@@ -14,14 +15,11 @@ use App\Http\Controllers\PageController;
 |
 */
 
-Route::get('/', [PageController::class, 'index'])
-    ->name('home');
+Route::get('/',            [PageController::class, 'index'])->name('home');
+Route::get('/game/{game}', [PageController::class, 'game']);
+Route::get('/history',     [PageController::class, 'history'])->name('history');
 
-Route::get('/game', [PageController::class, 'game'])
-    ->name('game');
-
-Route::get('/history', [PageController::class, 'history'])
-    ->name('history');
+Route::post('/messages',   [GameController::class, 'messages_sync']);
 
 
 require __DIR__.'/auth.php';

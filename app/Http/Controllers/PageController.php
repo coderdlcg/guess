@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Game;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -21,17 +22,14 @@ class PageController extends Controller
         return view('home', compact('data'));
     }
 
-    public function game(Request $request)
+    public function game(Request $request,  Game $game)
     {
         $user = Auth::user();
         if (!$user) {
             return redirect(route('login'));
         }
 
-        // dd('p', $user);
-
-        $data = [];
-        return view('game', compact('data'));
+        return view('game', compact('game'));
     }
 
     public function history(Request $request)

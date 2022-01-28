@@ -320,6 +320,12 @@ input::placeholder {
     flex-direction: column;
     justify-content: space-between;
 }
+.gameround {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 86vh;
+}
 .left-player .number, .right-player .number {
     font-size: 90px;
     font-weight: 700;
