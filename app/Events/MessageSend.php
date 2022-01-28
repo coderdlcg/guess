@@ -19,10 +19,11 @@ class MessageSend implements ShouldBroadcast
     public function __construct($message)
     {
         $this->message = $message;
+        $this->dontBroadcastToCurrentUser();
     }
 
     public function broadcastOn(): Channel
     {
-        return new Channel('game');
+        return new PresenceChannel('game.' . $this->message['game_id']);
     }
 }

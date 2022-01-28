@@ -7,12 +7,8 @@ use Illuminate\Http\Request;
 
 class GameController extends Controller
 {
-    public function index(Request $request)
+    public function messages_sync(Request $request)
     {
-        $message = $request->input('message', '');
-
-        if (strlen($message)) {
-            event(new MessageSend($message));
-        }
+        MessageSend::dispatch($request->all());
     }
 }
