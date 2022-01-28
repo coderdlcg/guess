@@ -16,3 +16,9 @@ use Illuminate\Support\Facades\Broadcast;
 Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
+
+Broadcast::channel('game.{game_id}', function ($user, $game_id) {
+    if($user->games->contains($game_id)){
+        return $user->name;
+    }
+});
