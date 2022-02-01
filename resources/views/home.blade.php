@@ -8,7 +8,11 @@
                 <h1>Угадай число</h1>
             </div>
             <div class="find">
-                <button class="btn btn-lg btn-primary btn-block btn-find" type="submit" data-toggle="modal" data-target="#staticBackdrop">Найти игру</button>
+                <form method="POST" action="{{ route('find_game') }}">
+                    @csrf
+                    <input type="hidden" value="1" name="find">
+                    <button class="btn btn-lg btn-primary btn-block btn-find" type="submit" data-toggle="modal" data-target="#staticBackdrop">Найти игру</button>
+                </form>
             </div>
             <div class="list">
                 <a href="{{ route('history') }}" class="btn btn-lg btn-primary btn-block btn-list" type="submit">Журнал матчей</a>
@@ -24,7 +28,11 @@
                         <div class="text">Поиск соперника...</div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary btn-close" data-dismiss="modal">Отмена</button>
+                        <form method="POST" action="{{ route('cancel') }}">
+                            @csrf
+                            <input type="hidden" value="1" name="cancel">
+                            <button type="submit" class="btn btn-secondary btn-close" data-dismiss="modal">Отмена</button>
+                        </form>
                     </div>
                 </div>
             </div>
