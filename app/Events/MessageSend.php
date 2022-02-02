@@ -9,17 +9,22 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class MessageSend implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $message;
+    public $round;
 
-    public function __construct($message)
+    public function __construct($message, $round)
     {
         $this->message = $message;
-        $this->dontBroadcastToCurrentUser();
+        $this->round = $round;
+
+        Log::channel('daily')->log('info', 'MessageSend __construct()', [$this->message, $this->round]);
+        //$this->dontBroadcastToCurrentUser();
     }
 
     public function broadcastOn(): Channel
