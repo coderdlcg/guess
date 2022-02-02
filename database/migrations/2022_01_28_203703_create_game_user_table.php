@@ -16,7 +16,7 @@ class CreateGameUserTable extends Migration
         Schema::create('game_user', function (Blueprint $table) {
             $table->integer('game_id');
             $table->integer('user_id');
-            $table->timestamps();
+            $table->integer('role')->default(0);
         });
     }
 
