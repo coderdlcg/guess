@@ -88,8 +88,20 @@ body, .min-h-screen {
     border-color: #12B0D2;
     width: 374px;
 }
-.btn-send_number {
+.btn-send_number, .btn-send_number:disabled {
+    border-radius: 5px !important;
+    background-color: #12B0D2;
+    border-color: #12B0D2;
     width: 100%;
+}
+.input_number {
+    border-radius: 5px !important;
+    color: #222;
+}
+.input_number:disabled, .form-control:disabled, .form-control[readonly], .btn-send_number.disabled  {
+    border-radius: 5px !important;
+    color: #888888;
+    /*opacity: 0;*/
 }
 .home-page .block-game .btn-find:active, .home-page .block-game .btn-list:active, .btn-send_number:hover, .btn-send_number:active, .btn-secondary:focus, .btn-primary:focus {
     color: #fff !important;
@@ -259,7 +271,9 @@ input::placeholder {
         transform: rotate(1turn);
     }
 }
-
+.modal-active{
+    display:block;
+}
 .modal-dialog {
     max-width: 500px;
     margin: 25vh auto;
@@ -331,7 +345,7 @@ input::placeholder {
     font-weight: 700;
 }
 .left-player .footer, .right-player .footer {
-    font-size: 36px;
+    font-size: 28px;
     font-weight: 700;
 }
 .left-player .footer .exit_game {
@@ -344,10 +358,13 @@ input::placeholder {
     text-decoration: underline;
     font-size: 16px;
 }
-.left-player.in_active, .right-player.in_active {
+.left-player, .right-player {
     color: #ACB2BD !important;
 }
-.left-player, .right-player, .game-info .table {
+.left-player.active, .right-player.active {
+    color: #55585E !important;
+}
+.game-info .table {
     color: #55585E !important;
 }
 .game-info .table td {
@@ -362,8 +379,11 @@ input::placeholder {
 .game-info .normal, .history-page .normal {
     color: #6993FF;
 }
-.left-player.in_active .footer p, .right-player.in_active .footer {
+.left-player .footer p, .right-player .footer {
     opacity: 0;
+}
+.left-player.active .footer p, .right-player.active .footer {
+    opacity: 1;
 }
 .game-info {
     border-right: 12px #AAD4C9 solid;
@@ -384,10 +404,6 @@ input::placeholder {
 .game-info .input_number {
     height: 48px;
     border: none;
-}
-input::placeholder {
-    color: #ACB2BD;
-    opacity: 1;
 }
 [type='text']:focus, [type='email']:focus, [type='url']:focus, [type='password']:focus, [type='number']:focus, [type='date']:focus, [type='datetime-local']:focus, [type='month']:focus, [type='search']:focus, [type='tel']:focus, [type='time']:focus, [type='week']:focus, [multiple]:focus, textarea:focus, select:focus {
     outline: 2px solid transparent;
