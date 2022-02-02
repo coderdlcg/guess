@@ -22,7 +22,16 @@ class GameController extends Controller
 
     public function messages_sync(Request $request)
     {
-        MessageSend::dispatch($request->all());
+        $message = $request->all();
+
+        if ($message['body']) {
+            $game = Game::find($message['game_id']);
+            $round = $game->processing($message);
+
+            Log::channel('daily')->log('info', 'GameController messages_sync()', [$message, $round]);
+
+            MessageSend::dispatch($message, $round);
+        }
     }
 
     public function find_game(Request $request)
@@ -50,7 +59,7 @@ class GameController extends Controller
             // присоединяемся к другому игроку
             $this->game->name = $this->game->name . $user->name;
             $this->game->status = Game::STATUS['game_started'];
-            $this->game->users()->attach($user->id);
+            $this->game->users()->attach($user->id, ['role' => Game::ROLES['player_2'] ]);
             $this->game->save();
 
             Log::channel('daily')->log('info', "user {$user->name} подключился к игре, {$this->game->name}", [$this->game, $user]);
@@ -64,7 +73,8 @@ class GameController extends Controller
                 'name' =>$user->name.' VS ',
                 'status' => Game::STATUS['connecting_players']
             ]);
-            $this->game->users()->attach($user->id);
+            // прикрепляем текущего польователя к игре (даем права доступа к созданной игре)
+            $this->game->users()->attach($user->id, ['role' => Game::ROLES['player_1'] ]);
 
             Log::channel('daily')->log('info', "user {$user->name} создал игру и ождает соперника {$this->game->name}", [$this->game, $user]);
         }
