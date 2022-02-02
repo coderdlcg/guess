@@ -22,14 +22,27 @@ class PageController extends Controller
         return view('home', compact('data'));
     }
 
-    public function game(Request $request,  Game $game)
+    public function game(Game $game)
     {
         $user = Auth::user();
         if (!$user) {
             return redirect(route('login'));
         }
 
-        return view('game', compact('game'));
+        $users = $game->users()->select('id', 'name')->get();
+        $first_move = $users->max('id');
+
+        $rounds = $game->rounds()->get()->all();
+
+        foreach ($users as $userItem) {
+            if ($userItem->id === $user->id) {
+                $player1 = $user;
+            } else {
+                $player2 = $userItem;
+            }
+        }
+
+        return view('game', compact('game', 'users', 'player1', 'player2', 'first_move', 'rounds'));
     }
 
     public function history(Request $request)
