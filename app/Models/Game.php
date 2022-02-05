@@ -165,6 +165,28 @@ class Game extends Model
         }
     }
 
+    public function leaveGame($user)
+    {
+        $this->status = Game::STATUS['game_over'];
+        $this->save();
+
+        $player_1 = $this->users()->where('role', Game::ROLES['player_1'])->first();
+        $player_2 = $this->users()->where('role', Game::ROLES['player_2'])->first();
+
+        switch ($user->id) {
+            case $player_1->id:
+                $this->winner = self::ROLES['player_2'];
+                $this->save();
+                break;
+            case $player_2->id:
+                $this->winner = self::ROLES['player_1'];
+                $this->save();
+                break;
+        }
+
+        return $this->whoIsWinner();
+    }
+
     public function processing($data)
     {
         if ($this->status === self::STATUS['game_over']) {

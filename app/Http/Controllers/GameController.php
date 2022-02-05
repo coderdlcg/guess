@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\GameOver;
 use App\Events\MessageSend;
 use App\Models\Game;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -24,8 +25,21 @@ class GameController extends Controller
     public function processing(Request $request)
     {
         $message = $request->all();
+        $user = Auth::user();
 
-        if ($message['body']) {
+        if ($message['body'] === 'leave' && $user->id === $message['user_id']) {
+            $game = User::findOrFail($user->id)->games()->where('game_id', $message['game_id'])->first();
+
+            if ($game && $game->status !== Game::STATUS['game_over']) {
+                $data = [
+                    'game_id' => $game->id,
+                    'winner'  => $game->leaveGame($user)
+                ];
+                GameOver::dispatch($data);
+            }
+        }
+
+        if ($message['body'] && $message['body'] !== 'leave') {
             $game = Game::find($message['game_id']);
             $round = $game->processing($message);
 
