@@ -10,13 +10,15 @@ class Game extends Model
 {
     use HasFactory;
 
-    protected $numberOfRounds = 5;
-    protected $minNumber = 1;
-    protected $maxNumber = 20;
+    const NUMBER_OF_ROUNDS = 5;
+    protected $minNumber   = 1;
+    protected $maxNumber   = 20;
 
     protected $fillable = [
         'name',
-        'status'
+        'status',
+        'current_round',
+        'winner'
     ];
 
     const STATUS = [
@@ -41,7 +43,7 @@ class Game extends Model
         return $this->hasMany(Round::class);
     }
 
-    public function newRound($round_id, $data, $player_1)
+    private function newRound($round_id, $data, $player_1)
     {
         $player_1_data = [
             "user_id" => $player_1->id,
@@ -59,7 +61,7 @@ class Game extends Model
         return $round;
     }
 
-    public function updateRound($round, $data, $player_2)
+    private function updateRound($round, $data, $player_2)
     {
         $player_2_data = [
             "user_id" => $player_2->id,
@@ -74,7 +76,7 @@ class Game extends Model
         return $round;
     }
 
-    public function completeRound($round)
+    private function completeRound($round)
     {
         $round->guess_number = rand($this->minNumber, $this->maxNumber);
         $round->save();
@@ -106,7 +108,7 @@ class Game extends Model
             }
         }
 
-        if ($this->current_round === $this->numberOfRounds) {
+        if ($this->current_round === self::NUMBER_OF_ROUNDS) {
             // конец игры
             $this->gameOver();
 
@@ -119,45 +121,53 @@ class Game extends Model
         return $round;
     }
 
-    public function gameOver()
+    private function gameOver()
     {
         $rounds = $this->rounds()->select('winner')->get()->pluck('winner')->toArray();
         $count_win_player_1 = 0;
         $count_win_player_2 = 0;
 
         foreach ($rounds as $user) {
-            if ($user === Game::ROLES['player_1']) {
+            if ($user === self::ROLES['player_1']) {
                 $count_win_player_1++;
             }
-            if ($user === Game::ROLES['player_2']) {
+            if ($user === self::ROLES['player_2']) {
                 $count_win_player_2++;
             }
         }
 
         if ($count_win_player_1 > $count_win_player_2) {
-            $this->winner = Game::ROLES['player_1'];
+            $this->winner = self::ROLES['player_1'];
         }
 
         if ($count_win_player_1 < $count_win_player_2) {
-            $this->winner = Game::ROLES['player_2'];
+            $this->winner = self::ROLES['player_2'];
         }
 
         if ($count_win_player_1 === $count_win_player_2) {
-            $this->winner = Game::ROLES['none'];
+            $this->winner = self::ROLES['none'];
         }
 
-        $this->status = Game::STATUS['game_over'];
+        $this->status = self::STATUS['game_over'];
         $this->save();
+        Log::channel('daily')->log('info', 'Game gameOver()', ['game_status' => $this->status]);
+    }
 
-        $player_winner = $this->users()->where('role', $this->winner)->first();
-        Log::channel('daily')->log('info', 'Game processing()', ['player_winner' =>$player_winner]);
+    public function whoIsWinner()
+    {
+        if ($this->winner != self::ROLES['none']) {
+            $player_winner = $this->users()->where('role', $this->winner)->first();
+            Log::channel('daily')->log('info', 'Game whoIsWinner()', ['player_winner' => $player_winner]);
 
-        return $player_winner;
+            return $player_winner;
+        } else {
+            return self::ROLES['none'];
+        }
     }
 
     public function processing($data)
     {
-        if ($this->status === Game::STATUS['game_over']) {
+        if ($this->status === self::STATUS['game_over']) {
             Log::channel('daily')->log('info', 'Game processing() - status = game_over');
 
             return false;
@@ -165,8 +175,8 @@ class Game extends Model
 
         Log::channel('daily')->log('info', 'Game processing()', [$data]);
 
-        $player_1 = $this->users()->where('role', Game::ROLES['player_1'])->first();
-        $player_2 = $this->users()->where('role', Game::ROLES['player_2'])->first();
+        $player_1 = $this->users()->where('role', self::ROLES['player_1'])->first();
+        $player_2 = $this->users()->where('role', self::ROLES['player_2'])->first();
 
         if ($player_1->id === $data['user_id']) {
             $player = $player_1;

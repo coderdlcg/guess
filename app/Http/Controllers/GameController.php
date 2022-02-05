@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\GameOver;
 use App\Events\MessageSend;
 use App\Models\Game;
 use Illuminate\Http\Request;
@@ -20,7 +21,7 @@ class GameController extends Controller
     protected $cancel;
 
 
-    public function messages_sync(Request $request)
+    public function processing(Request $request)
     {
         $message = $request->all();
 
@@ -28,9 +29,19 @@ class GameController extends Controller
             $game = Game::find($message['game_id']);
             $round = $game->processing($message);
 
-            Log::channel('daily')->log('info', 'GameController messages_sync()', [$message, $round]);
+            Log::channel('daily')->log('info', 'GameController processing(). current_round: '.$game->current_round, [$message, $round]);
 
             MessageSend::dispatch($message, $round);
+
+            if ($game->status === Game::STATUS['game_over']) {
+                $data = [
+                    'game_id' => $game->id,
+                    'winner'  => $game->whoIsWinner()
+                ];
+                GameOver::dispatch($data);
+            }
+
+            Log::channel('daily')->log('info', '-------------------------------------------------------');
         }
     }
 

@@ -11,24 +11,22 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-class MessageSend implements ShouldBroadcast
+class GameOver implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $message;
-    public $round;
+    public $data;
 
-    public function __construct($message, $round)
+    public function __construct($data)
     {
-        $this->message = $message;
-        $this->round = $round;
+        $this->data = $data;
 
-        Log::channel('daily')->log('info', 'Event MessageSend', [$this->message, $this->round]);
+        Log::channel('daily')->log('info', 'Event GameOver', [$this->data]);
         //$this->dontBroadcastToCurrentUser();
     }
 
     public function broadcastOn(): Channel
     {
-        return new PresenceChannel('game.' . $this->message['game_id']);
+        return new PresenceChannel('game.' . $this->data['game_id']);
     }
 }

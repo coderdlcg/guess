@@ -13,7 +13,7 @@
         <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     </head>
     <body>
-        <div class="app container-lg">
+        <div class="app container-lg" id="app">
             <main>
                 {{ $slot }}
             </main>

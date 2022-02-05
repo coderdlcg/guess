@@ -30,19 +30,35 @@ class PageController extends Controller
         }
 
         $users = $game->users()->select('id', 'name')->get();
-        $first_move = $users->max('id');
-
+        $player_1 = $game->users()->where('role', Game::ROLES['player_1'])->first();
+        $player_2 = $game->users()->where('role', Game::ROLES['player_2'])->first();
+        $first_move = $users->min('id');
         $rounds = $game->rounds()->get()->all();
+        $winner = 0;
 
         foreach ($users as $userItem) {
             if ($userItem->id === $user->id) {
-                $player1 = $user;
+                $left_player = $user;
             } else {
-                $player2 = $userItem;
+                $right_player = $userItem;
             }
         }
 
-        return view('game', compact('game', 'users', 'player1', 'player2', 'first_move', 'rounds'));
+        if ($game->status === Game::STATUS['game_over']) {
+            $winner = $game->whoIsWinner();
+        }
+
+        return view('game', compact([
+            'game',
+            'users',
+            'left_player',
+            'right_player',
+            'player_1',
+            'player_2',
+            'first_move',
+            'rounds',
+            'winner',
+        ]));
     }
 
     public function history(Request $request)

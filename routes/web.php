@@ -20,7 +20,7 @@ Route::get('/',            [PageController::class, 'index'])->name('home');
 Route::get('/game/{game}', [PageController::class, 'game']);
 Route::get('/history',     [PageController::class, 'history'])->name('history');
 
-Route::post('/messages',   [GameController::class, 'messages_sync']);
+Route::post('/processing', [GameController::class, 'processing']);
 Route::post('/find_game',  [GameController::class, 'find_game'])->name('find_game');
 Route::post('/cancel',     [GameController::class, 'cancel'])->name('cancel');
 
