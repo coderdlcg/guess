@@ -156,7 +156,9 @@ class Game extends Model
     public function processing($data)
     {
         if ($this->status === Game::STATUS['game_over']) {
-            return ;
+            Log::channel('daily')->log('info', 'Game processing() - status = game_over');
+
+            return false;
         }
 
         Log::channel('daily')->log('info', 'Game processing()', [$data]);
@@ -164,23 +166,20 @@ class Game extends Model
         $player_1 = $this->users()->where('role', Game::ROLES['player_1'])->first();
         $player_2 = $this->users()->where('role', Game::ROLES['player_2'])->first();
 
+        if ($player_1->id === $data['user_id']) {
+            $player = $player_1;
+        } else {
+            $player = $player_2;
+        }
+
         $round = $this->rounds()->where('round_id', $this->current_round)->first();
 
-        if ($player_1->id === $data['user_id']) {
-            // ход игрока $player_1
-            if (!$round) {
-                return $this->newRound($this->current_round, $data, $player_1);
-            } else {
-                return $round;
-            }
+        if (!$round) {
+            return $this->newRound($this->current_round, $data, $player);
         }
 
-        if ($round && $player_2->id === $data['user_id']) {
-            $round = $this->updateRound($round, $data, $player_2);
-        }
+        $round = $this->updateRound($round, $data, $player);
 
-        if ($round && $round->player_1 && $round->player_2) {
-            return $this->completeRound($round);
-        }
+        return $this->completeRound($round);
     }
 }
