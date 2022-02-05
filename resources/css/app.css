@@ -271,6 +271,9 @@ input::placeholder {
         transform: rotate(1turn);
     }
 }
+#modalLeaveGame #modalLeaveGame___BV_modal_footer_, #modalLeaveGame #modalLeaveGame___BV_modal_header_ {
+    display: none;
+}
 .modal-active{
     display:block;
 }
@@ -278,8 +281,7 @@ input::placeholder {
     max-width: 500px;
     margin: 25vh auto;
 }
-.modal-content {
-    height: 240px;
+.modal-content, #modalLeaveGame .modal-content {
     background-color: #D1E8E2;
 }
 .modal-body {
@@ -291,7 +293,7 @@ input::placeholder {
 }
 .modal-body .text {
     text-align: center;
-    margin-top: 30px;
+    margin: 50px 0;
 }
 .modal-body .text.winner {
     font-size: 52px;
@@ -302,17 +304,18 @@ input::placeholder {
     border: none;
     justify-content: center;
 }
-.btn-close {
-    font-weight: 700;
+.btn-tohome {
+    font-weight: 700 !important;
     border: none;
-    color: #12B0D2;
+    color: #12B0D2 !important;
     text-decoration: underline;
 }
-.btn-close:hover, .btn-close:active, .btn-secondary:active  {
+.btn-tohome:hover, .btn-tohome:active, .btn-secondary:active  {
     color: #12B0D2 !important;
     background-color: #d1e8e2 !important;
     border-color: #d1e8e2 !important;
 }
+
 
 
 
@@ -378,6 +381,14 @@ input::placeholder {
 }
 .game-info .normal, .history-page .normal {
     color: #6993FF;
+}
+.game-info .message {
+    color: #12B0D2;
+    font-weight: 700;
+    font-size: 32px;
+}
+.game-info .table > :not(:first-child) {
+    border-top: 2px solid #d1e8e2;
 }
 .left-player .footer p, .right-player .footer {
     opacity: 0;

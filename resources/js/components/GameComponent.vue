@@ -10,7 +10,7 @@
             <div class="footer">
                 <div class="info">
                     <p>Ваш ход</p>
-                    <a href="#" class="exit_game" data-toggle="modal" data-target="#staticBackdrop" @click="showModal">Покинуть игру</a>
+                    <a href="#" class="exit_game" @click="leaveGame">Покинуть игру</a>
                 </div>
             </div>
         </div>
@@ -60,10 +60,8 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="messages" v-if="messages.length">
-                    <div class="message" v-for="(message) in messages">
-                        <span class="d-inline-block">{{ message }}</span>
-                    </div>
+                <div class="message">
+                    <span class="d-inline-block">{{ message }}</span>
                 </div>
                 <div class="footer">
                     <fieldset :disabled="disabled >= 1">
@@ -96,6 +94,10 @@
                 </div>
             </div>
         </div>
+        <b-modal id="modalLeaveGame" centered>
+            <div class="text winner">{{ modal_text }}</div>
+            <a href="/" class="btn btn-tohome">В главное меню</a>
+        </b-modal>
     </div>
 </template>
 
@@ -114,7 +116,7 @@ export default {
     ],
     data() {
         return {
-            messages: [],
+            message: '',
             inputNumber: '',
             leftPlayerNumber: '',
             rightPlayerNumber: '',
@@ -124,6 +126,7 @@ export default {
             isActiveLeftPlayer: false,
             isActiveRightPlayer: false,
             isGameOver: false,
+            modal_text: ''
         }
     },
     computed: {
@@ -213,22 +216,29 @@ export default {
             this.placeholder = '';
             this.leftPlayerNumber = '';
             this.rightPlayerNumber = '';
-            this.messages.push('Игра окончена!');
 
+            let text = '';
             if (winner !== 8) {
                 if (this.left_player.id === winner.id) {
-                    this.messages.push('Вы победили!!!');
+                    text = 'Победа!';
                 } else {
-                    this.messages.push('Вы проиграли...');
+                    text = 'Проигрыш!';
                 }
             } else {
-                this.messages.push('Ничья.');
+                text = 'Ничья!';
             }
+            this.message = text;
+            this.modal_text = text;
             // здесь активировать модальное окно
+            this.showModal()
+        },
+        leaveGame() {
+            axios.post('/processing', { body: 'leave', user_id: this.user.id, game_id: this.game.id });
+            this.showModal()
         },
         showModal() {
-            // this.$refs['my-modal'].show()
-        }
+            this.$bvModal.show('modalLeaveGame');
+        },
     }
 }
 </script>
