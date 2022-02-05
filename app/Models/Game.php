@@ -106,13 +106,15 @@ class Game extends Model
             }
         }
 
-        $this->current_round++;
-        $this->save();
-
-        if ($this->current_round > $this->numberOfRounds) {
+        if ($this->current_round === $this->numberOfRounds) {
             // конец игры
             $this->gameOver();
+
+            return $round;
         }
+
+        $this->current_round++;
+        $this->save();
 
         return $round;
     }
