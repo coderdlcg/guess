@@ -395,6 +395,9 @@ input::placeholder {
 .game-info .footer .mt20 {
     margin-top: 20px;
 }
+.game-info.game_over .footer {
+    opacity: 0;
+}
 .table-round th {
     width: 20vh;
 }

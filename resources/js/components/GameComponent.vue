@@ -14,7 +14,7 @@
                 </div>
             </div>
         </div>
-        <div class="game-info col-6">
+        <div class="game-info col-6" :class="{game_over: isGameOver}">
             <div class="gameround p-3">
                 <div class="table-round">
                     <table class="table">
@@ -109,7 +109,8 @@ export default {
             disabled: 0,
             activeUsers: [],
             isActivePlayer1: false,
-            isActivePlayer2: false
+            isActivePlayer2: false,
+            isGameOver: false
         }
     },
     computed: {
@@ -140,13 +141,7 @@ export default {
 
         if (round && round['winner'] > 0 && round['round_id'] === 5) {
             // game over
-            this.disabled = 1;
-            this.isActivePlayer1 = false;
-            this.isActivePlayer2 = false;
-            this.placeholder = ''
-
-            this.messages.push('Game Over!');
-            // здесь активировать модальное окно
+            this.gameOver();
         }
 
         this.channel
@@ -160,13 +155,14 @@ export default {
                 this.activeUsers.splice(this.activeUsers.indexOf(user), 1);
             })
             .listen('MessageSend', ({message, round}) => {
-                
+
                 if (round['winner'] > 0) {
                     this.rounds.pop();
                     this.rounds.push(round);
                     this.player1Number = '';
                     this.player2Number = '';
                 } else {
+                    this.player2Number = '';
                     this.rounds.push(round);
                 }
 
@@ -186,11 +182,7 @@ export default {
 
                 if (round['winner'] > 0 && round['round_id'] === 5) {
                     // game over
-                    this.disabled = 1;
-                    this.isActivePlayer1 = false;
-                    this.isActivePlayer2 = false;
-
-                    // здесь активировать модальное окно
+                    this.gameOver();
                 }
 
             })
@@ -202,6 +194,18 @@ export default {
                 this.player1Number = this.inputNumber;
                 this.inputNumber = '';
             }
+        },
+        gameOver() {
+            this.disabled = 1;
+            this.isActivePlayer1 = false;
+            this.isActivePlayer2 = false;
+            this.isGameOver = true;
+            this.placeholder = '';
+            this.player1Number = '';
+            this.player2Number = '';
+
+            this.messages.push('Game Over!');
+            // здесь активировать модальное окно
         },
         showModal() {
             // this.$refs['my-modal'].show()
