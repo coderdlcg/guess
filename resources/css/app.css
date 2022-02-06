@@ -15,9 +15,6 @@ html,
 body {
     height: 100%;
 }
-*, ::before, ::after {
-    border-color: #ffffff0f !important;
-}
 body, .min-h-screen {
     font-family: 'Roboto', sans-serif;
     background-color: #D1E8E2 !important;
@@ -488,4 +485,6 @@ input::placeholder {
 .history-page .table th:nth-child(3), .history-page .table td:nth-child(3) {
     text-align: center;
 }
-
+.history-page .table ::before, .history-page .table ::after {
+    border-color: #ffffff0f !important;
+}
