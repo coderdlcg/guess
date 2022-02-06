@@ -22,6 +22,7 @@ Route::get('/history',     [PageController::class, 'history'])->name('history');
 
 Route::post('/processing', [GameController::class, 'processing']);
 Route::post('/find_game',  [GameController::class, 'find_game'])->name('find_game');
-Route::post('/cancel',     [GameController::class, 'cancel'])->name('cancel');
+//Route::post('/find',       [GameController::class, 'find'])->name('find');
+//Route::post('/cancel',     [GameController::class, 'cancel'])->name('cancel');
 
 require __DIR__.'/auth.php';

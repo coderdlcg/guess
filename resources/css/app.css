@@ -84,14 +84,14 @@ body, .min-h-screen {
 
 .home-page .block-game .btn-find, .home-page .block-game .btn-list, .btn-send_number {
     border-radius: 5px;
-    background-color: #12B0D2;
-    border-color: #12B0D2;
+    background-color: #12B0D2 !important;
+    border-color: #12B0D2 !important;
     width: 374px;
 }
 .btn-send_number, .btn-send_number:disabled {
     border-radius: 5px !important;
-    background-color: #12B0D2;
-    border-color: #12B0D2;
+    background-color: #12B0D2 !important;
+    border-color: #12B0D2 !important;
     width: 100%;
 }
 .input_number {
@@ -281,8 +281,18 @@ input::placeholder {
     max-width: 500px;
     margin: 25vh auto;
 }
-.modal-content, #modalLeaveGame .modal-content {
+.modal-content, #modalLeaveGame .modal-content, #modalFindGame .modal-content {
     background-color: #D1E8E2;
+}
+#modalFindGame .modal-content {
+    font-weight: 700;
+    color: #55585E;
+}
+#modalFindGame .modal-content .exit_game {
+    color: #12B0D2 !important;
+}
+#modalFindGame .modal-content .exit_game:hover, #modalFindGame .modal-content .exit_game:active {
+    color: #12B0D2 !important;
 }
 .modal-body {
     display: flex;

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\FindGame;
 use App\Events\GameOver;
 use App\Events\MessageSend;
 use App\Models\Game;
@@ -139,18 +140,41 @@ class GameController extends Controller
         return redirect(route('home'));
     }
 
-    public function cancel(Request $request)
-    {
-        $user = Auth::user();
-        if (!$user) {
-            return redirect(route('login'));
-        }
-
-        $this->cancel = isset($request->post()['cancel']);
-
-        info("cancel()", ['cancel' => $this->cancel, 'user' => $user]);
-        Log::channel('daily')->log('info', "user {$user->name} отменил игру", ['cancel' => $this->cancel, $user]);
-
-        return redirect(route('home'));
-    }
+//    public function find(Request $request)
+//    {
+//        $user = Auth::user();
+//        if (!$user) {
+//            return redirect(route('login'));
+//        }
+//
+//        $data = $request->all();
+//
+//        if ($user->id === $data['user_id'] && $data['body'] === 'find') {
+//            Log::channel('daily')->log('info', "Поиск игры", [$data, $user]);
+//            $data = [
+//                'user_id' => $user->id,
+//                'status'  => 'find'
+//            ];
+//            FindGame::dispatch($data);
+//        }
+//    }
+//
+//    public function cancel(Request $request)
+//    {
+//        $user = Auth::user();
+//        if (!$user) {
+//            return redirect(route('login'));
+//        }
+//
+//        $data = $request->all();
+//
+//        if ($user->id === $data['user_id'] && $data['body'] === 'cancel') {
+//            Log::channel('daily')->log('info', "Отмена поиска игры", [$data, $user]);
+//            $data = [
+//                'user_id' => $user->id,
+//                'status'  => 'cancel'
+//            ];
+//            FindGame::dispatch($data);
+//        }
+//    }
 }

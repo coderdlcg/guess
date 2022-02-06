@@ -7,34 +7,9 @@
             <div class="h1">
                 <h1>Угадай число</h1>
             </div>
-            <div class="find">
-                <form method="POST" action="{{ route('find_game') }}">
-                    @csrf
-                    <input type="hidden" value="1" name="find">
-                    <button class="btn btn-lg btn-primary btn-block btn-find" type="submit" data-toggle="modal" data-target="#staticBackdrop">Найти игру</button>
-                </form>
-            </div>
+            <find-game-component></find-game-component>
             <div class="list">
                 <a href="{{ route('history') }}" class="btn btn-lg btn-primary btn-block btn-list" type="submit">Журнал матчей</a>
-            </div>
-        </div>
-
-        <!-- Modal -->
-        <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <div class="clock-loader"></div>
-                        <div class="text">Поиск соперника...</div>
-                    </div>
-                    <div class="modal-footer">
-                        <form method="POST" action="{{ route('cancel') }}">
-                            @csrf
-                            <input type="hidden" value="1" name="cancel">
-                            <button type="submit" class="btn btn-secondary btn-close" data-dismiss="modal">Отмена</button>
-                        </form>
-                    </div>
-                </div>
             </div>
         </div>
     </div>

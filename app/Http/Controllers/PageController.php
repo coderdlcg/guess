@@ -16,10 +16,7 @@ class PageController extends Controller
             return redirect(route('login'));
         }
 
-        // dd('p', $user);
-
-        $data = [];
-        return view('home', compact('data'));
+        return view('home');
     }
 
     public function game(Game $game)
