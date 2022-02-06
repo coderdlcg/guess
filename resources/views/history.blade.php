@@ -1,12 +1,12 @@
 <x-app-layout>
     <div class="history-page ">
         <div class="row">
-            <div class="col-4 offset-4">
+            <div class="col-12">
                 <h1>История матчей</h1>
             </div>
         </div>
         <div class="history-games row">
-            <div class="table-round offset-2 col-8">
+            <div class="table-round offset-1 col-10">
                 <table class="table table-striped">
                     <thead>
                     <tr>
@@ -16,21 +16,21 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <th scope="row">10.11.2021 11:53</th>
-                        <td>Bob</td>
-                        <td class="failed">Поражение</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">12.11.2021 11:53</th>
-                        <td>Jon</td>
-                        <td class="success">Победа</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">13.11.2021 11:53</th>
-                        <td>Tom</td>
-                        <td class="normal">Ничья</td>
-                    </tr>
+                    @foreach($games as $game)
+                        <tr>
+                            <th scope="row">{{ \Carbon\Carbon::createFromDate($game->date)->format('d.m.Y H:i') }}</th>
+                            <th scope="row">{{ $game->opponent_name }}</th>
+
+                            @if($game->winner === \App\Models\Game::ROLES['none'])
+                                <td class="normal">Ничья</td>
+                            @elseif($game->winner === $game->role)
+                                <td class="failed">Поражение</td>
+                            @else
+                                <td class="success">Победа</td>
+                            @endif
+
+                        </tr>
+                    @endforeach
                     </tbody>
                 </table>
             </div>
