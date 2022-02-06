@@ -1,66 +1,60 @@
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+version 0.1
 
-## About Laravel
+## Тестовое задание «Игра»
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Необходимо реализовать веб-приложение для игры
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Вводная информация
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Игра «Угадай число». Компьютер загадывает число от 1 до 20, а двое игроков должны
+его угадать. Игра длится 5 ходов. Выделено 3 уровня сложности реализации тестового задания: easy, normal, hard.
 
-## Learning Laravel
+Описание процесса работы приложения
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Реализация Easy:
+1. Наличие страницы регистрации и авторизации. Подтверждение регистрации по e-mail не требуется.
+2. Реализовать страницу для подбора игры. Изначально доступна кнопка «Найти игру».
+3. При нажатии «Найти игру» загорается сообщение о поиске лобби и появляется кнопка для отмены поиска. При присоединении к поиску очередного игрока сервер сам
+объединяет двух игроков в лобби и запускает игру, происходит переход на страницу с игрой. Количество лобби (одновременно играющих пар) не ограничено. Игрок без
+пары находится на странице ожидания.
+4. На странице игры пользователь вводит число в текстовое поле и нажимает кнопку
+«Угадать».
+5. В ходе игры должна отображаться таблица с историей предыдущих ходов, состоящая
+из столбцов: номер хода, загаданное компьютером число, ваш ответ, ответ противника, результат (выиграли/проиграли/ничья).
+6. Выиграет тот, чей ответ максимально ближе к загаданному компьютером числу.
+7. В ходе игры отображается сообщение «Ваш ход» или «Ожидаем противника». А по
+окончанию игры (после всех 5ти ходов) «Вы выиграли/проиграли/ничья».
+8. Использовать макет из [Figma](https://www.figma.com/file/a0x700qQgIumLllTczARdY/Guess-Number?node-id=0%3A1).
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Реализация Normal:
+1. Реализация уровня Easy.
+2. Добавить страницу «Журнал матчей», где отображаются история предыдущих игр, а
+именно: дата, время, ник противника, результат игры.
+3. В ходе игры доступна кнопка «Покинуть игру» приводящая к поражению игрока и
+победе противника.
 
-## Laravel Sponsors
+### Реализация Hard:
+1. Реализация уровня Normal.
+2. После перезагрузки страницы браузера, игра должна быть продолжена.
+3. Если игрок не совершил ход в течении 20 секунд, засчитываем ему проигрыш в данном ходу и переходим к следующему ходу.
+4. Написать docker-compose.yml и при необходимости Dockerfile конфигурации.
+Приложение должно собираться из исходников и запускаться одной командой
+«docker-compose up».
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+Общие требования к приложению для всех уровней сложности
 
-### Premium Partners
+1. Приложение должно соответствовать принципам ООП.
+2. Реализовать с использованием MVC-паттерна;
+3. Использовать long polling и/или WebSocket для отправки сообщений от сервера к
+клиенту. Допускается/предполагается использовать готовые библиотеки.
+4. Для хранения журнала матчей использовать базу данных.
+5. Желательно показать приятный интерфейс.
+6. От качества решения продемонстрированного Вами будет зависеть наше предложение.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[CMS Max](https://www.cmsmax.com/)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
-- **[Romega Software](https://romegasoftware.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Результат
+1. Указать реализованный Вами уровень easy, normal или hard.
+2. Ссылка на репозиторий исходного кода bitbucket, github или любой другой.
+3. Краткий отчет о потраченном времени на разработку и обучение.
+4. Дайте пояснение архитектурных решений.
