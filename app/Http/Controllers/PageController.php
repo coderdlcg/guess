@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Game;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PageController extends Controller
 {
@@ -58,17 +59,21 @@ class PageController extends Controller
         ]));
     }
 
-    public function history(Request $request)
+    public function history()
     {
         $user = Auth::user();
         if (!$user) {
             return redirect(route('login'));
         }
 
-        // dd('p', $user);
+        $games = DB::table('games')
+            ->join('game_user', 'games.id', '=', 'game_user.game_id')
+            ->join('users', 'users.id', '=', 'game_user.user_id')
+            ->where('user_id', '!=',$user->id)
+            ->select('games.id as game_id', 'winner', 'role', 'users.name as opponent_name', 'games.updated_at as date')
+            ->get();
 
-        $data = [];
-        return view('history', compact('data'));
+        return view('history', compact('user', 'games'));
     }
 
     public function create()
