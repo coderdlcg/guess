@@ -94,7 +94,7 @@
                 </div>
             </div>
         </div>
-        <b-modal id="modalLeaveGame" centered>
+        <b-modal id="modalLeaveGame" centered no-close-on-backdrop no-close-on-esc hide-header-close hide-header hide-footer>
             <div class="text winner">{{ modal_text }}</div>
             <a href="/" class="btn btn-tohome">В главное меню</a>
         </b-modal>
