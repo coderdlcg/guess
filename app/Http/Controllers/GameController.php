@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\FindGame;
 use App\Events\GameOver;
 use App\Events\MessageSend;
+use App\Events\StartGame;
 use App\Models\Game;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -13,10 +14,6 @@ use Illuminate\Support\Facades\Log;
 
 class GameController extends Controller
 {
-    const SETTINGS_GAME = [
-        'time_wait' => 60,
-        'step_check' => 1
-    ];
 
     protected $game;
     protected $find;
@@ -60,121 +57,66 @@ class GameController extends Controller
         }
     }
 
-    public function find_game(Request $request)
+    public function findGame(Request $request)
     {
+        $data = $request->all();
+
+        if ($data['body'] === 'find') {
+            event(new FindGame($data));
+        }
+    }
+
+    public function newGame(Request $request)
+    {
+        $data = $request->all();
         $user = Auth::user();
-        if (!$user) {
-            return redirect(route('login'));
-        }
 
-        $this->find = isset($request->post()['find']);
+        if ($data['body'] === 'create' && count($data['users']) === 2) {
+            Log::channel('daily')->log('info', "Создание игры", [$data, $user->id]);
 
-        info("find_game()", ['find' => $this->find, 'user' => $user]);
+            foreach ($data['users'] as $user) {
+                $user = User::find($user['id']);
 
-        if (!$this->game) {
-            $this->game = Game::where('status', Game::STATUS['connecting_players'])->first();
-        }
+                if (!$this->game) {
+                    $this->game = Game::where('status', Game::STATUS['connecting_players'])->first();
+                }
 
-        $exist_user_game = null;
-        if ($this->game) {
-            // проверяем есть ли у тек пользователя уже созданная игра
-            $exist_user_game = $this->game->users()->where('user_id', $user->id)->get()->count();
-        }
+                $exist_user_game = null;
+                if ($this->game) {
+                    // проверяем есть ли у тек пользователя уже созданная игра
+                    $exist_user_game = $this->game->users()->where('user_id', $user->id)->get()->count();
+                }
 
-        if ($exist_user_game === 0) {
-            // присоединяемся к другому игроку
-            $this->game->name = $this->game->name . $user->name;
-            $this->game->status = Game::STATUS['game_started'];
-            $this->game->users()->attach($user->id, ['role' => Game::ROLES['player_2'] ]);
-            $this->game->save();
+                if ($exist_user_game === 0) {
+                    // присоединяемся к другому игроку
+                    $this->game->name = $this->game->name . $user->name;
+                    $this->game->status = Game::STATUS['game_started'];
+                    $this->game->users()->attach($user->id, ['role' => Game::ROLES['player_2'] ]);
+                    $this->game->save();
 
-            Log::channel('daily')->log('info', "user {$user->name} подключился к игре, {$this->game->name}", [$this->game, $user]);
+                    Log::channel('daily')->log('info', "user {$user->name} подключился к игре, {$this->game->name}", [$this->game, $user]);
+                }
 
-            return redirect('/game/'.$this->game->id);
-        }
+                if (!$this->game && !$exist_user_game) {
+                    // если нет игр ожидающих игрока и нет игры созданной текущим игроком, тогда создаем новую и ждем присоединения
+                    $this->game = Game::create([
+                        'name' => $user->name.' VS ',
+                        'status' => Game::STATUS['connecting_players']
+                    ]);
+                    // прикрепляем текущего польователя к игре (даем права доступа к созданной игре)
+                    $this->game->users()->attach($user->id, ['role' => Game::ROLES['player_1'] ]);
 
-        if (!$this->game && !$exist_user_game) {
-            // если нет игр ожидающих игрока и нет игры созданной текущим игроком, тогда создаем новую и ждем присоединения
-            $this->game = Game::create([
-                'name' =>$user->name.' VS ',
-                'status' => Game::STATUS['connecting_players']
-            ]);
-            // прикрепляем текущего польователя к игре (даем права доступа к созданной игре)
-            $this->game->users()->attach($user->id, ['role' => Game::ROLES['player_1'] ]);
-
-            Log::channel('daily')->log('info', "user {$user->name} создал игру и ождает соперника {$this->game->name}", [$this->game, $user]);
-        }
-
-        $time_wait = self::SETTINGS_GAME['time_wait'];
-        while ($time_wait && !$this->cancel) {
-            $this->game = Game::find($this->game->id);
-            $exist_user_game = $this->game->users()->where('user_id', $user->id)->get()->count();
-
-            if ($this->game->status == Game::STATUS['game_started'] && $exist_user_game > 0) {
-                Log::channel('daily')->log('info', "user {$user->name} дождался соперника, игра {$this->game->name} началась", [$this->game, $user]);
-                Log::channel('daily')->log('info', "-------------------------------------------------------");
-
-                return redirect('/game/' . $this->game->id);
-            }
-
-            Log::channel('daily')->log('info', "user {$user->name} ожидает соперника", [$this->game, $user]);
-
-            $time_wait--;
-            sleep(self::SETTINGS_GAME['step_check']);
-        }
-
-        if ($this->cancel || $time_wait === 0) {
-            if ($this->game) {
-                $exist_user_game = $this->game->users()->where('user_id', $user->id)->get()->count();
-                if ($exist_user_game > 0) {
-                    $this->game->users()->detach($user->id);
-                    $this->game->delete();
-
-                    Log::channel('daily')->log('info', "для user {$user->name} не найден соперник, игра удалена", [$this->game, $user]);
+                    Log::channel('daily')->log('info', "user {$user->name} создал игру ({$this->game->name}) и ождает соперника ", [$this->game, $user]);
                 }
             }
 
-            Log::channel('daily')->log('info', "-------------------------------------------------------");
+            $data = [
+                'body'    => 'redirect',
+                'user'    => $user,
+                'game_id' => $this->game->id
+            ];
+
+            event(new StartGame($data));
         }
-
-        return redirect(route('home'));
     }
-
-//    public function find(Request $request)
-//    {
-//        $user = Auth::user();
-//        if (!$user) {
-//            return redirect(route('login'));
-//        }
-//
-//        $data = $request->all();
-//
-//        if ($user->id === $data['user_id'] && $data['body'] === 'find') {
-//            Log::channel('daily')->log('info', "Поиск игры", [$data, $user]);
-//            $data = [
-//                'user_id' => $user->id,
-//                'status'  => 'find'
-//            ];
-//            FindGame::dispatch($data);
-//        }
-//    }
-//
-//    public function cancel(Request $request)
-//    {
-//        $user = Auth::user();
-//        if (!$user) {
-//            return redirect(route('login'));
-//        }
-//
-//        $data = $request->all();
-//
-//        if ($user->id === $data['user_id'] && $data['body'] === 'cancel') {
-//            Log::channel('daily')->log('info', "Отмена поиска игры", [$data, $user]);
-//            $data = [
-//                'user_id' => $user->id,
-//                'status'  => 'cancel'
-//            ];
-//            FindGame::dispatch($data);
-//        }
-//    }
 }

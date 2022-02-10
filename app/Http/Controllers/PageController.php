@@ -20,6 +20,16 @@ class PageController extends Controller
         return view('home');
     }
 
+    public function find(Request $request)
+    {
+        $auth_user = Auth::user();
+        if (!$auth_user) {
+            return redirect(route('login'));
+        }
+
+        return view('find', compact('auth_user'));
+    }
+
     public function game(Game $game)
     {
         $user = Auth::user();

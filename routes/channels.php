@@ -23,6 +23,6 @@ Broadcast::channel('game.{game_id}', function ($user, $game_id) {
     }
 });
 
-//Broadcast::channel('find', function ($user) {
-//    return ['id' => $user->id, 'name' => $user->name];
-//});
+Broadcast::channel('find', function ($user) {
+    return ['id' => $user->id, 'name' => $user->name];
+});
