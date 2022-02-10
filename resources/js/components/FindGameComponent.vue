@@ -1,17 +1,11 @@
 <template>
     <div>
-        <form method="POST" action="/find_game">
-            <input type="hidden" value="1" name="find">
-            <input type="hidden" name="_token" :value="csrf">
-            <button class="btn btn-lg btn-primary btn-block btn-find" @click="findGame">Найти игру</button>
-        </form>
-
         <b-modal id="modalFindGame" centered no-close-on-backdrop no-close-on-esc hide-header-close hide-header hide-footer>
             <div class="modal-body">
                 <div class="clock-loader"></div>
                 <div class="text">Поиск соперника...</div>
             </div>
-            <a href="#" class="exit_game" @click="cancelFindGame">Отмена</a>
+            <a href="/" class="exit_game">Отмена</a>
         </b-modal>
     </div>
 </template>
@@ -19,36 +13,36 @@
 <script>
 export default {
     props: [
-
+        'auth_user'
     ],
     data() {
         return {
             csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
         }
     },
-    computed: {
-        channel() {
-            return window.Echo.join('find');
-        }
-    },
     mounted() {
+        this.showModal();
+        Echo.channel('find')
+            .listen('StartGame', (data) => {
+                window.location.href = '/game/' + data.message.game_id;
+            })
+            .listen('FindGame', (data) => {
+                if (data.message.body === 'find' && (this.auth_user.id > data.message.user.id || this.auth_user.id < data.message.user.id)) {
+                    let users = [];
+                    users.push(this.auth_user);
+                    users.push(data.message.user);
 
-        // this.channel
-        //     .listen('FindGame', ({data}) => {
-        //
-        //     })
+                    this.createGame(users);
+                }
+            });
+        this.findGame(this.auth_user);
     },
     methods: {
-        findGame() {
-            // axios.post('/find', { body: 'find', user_id: this.user.id });
-            this.showModal()
+        findGame(user) {
+            axios.post('/find_game', { body: 'find', user: user });
         },
-        cancelFindGame() {
-            // axios.post('/cancel', { body: 'cancel', user_id: this.user.id });
-            this.hideModal()
-        },
-        hideModal() {
-            this.$bvModal.hide('modalFindGame');
+        createGame(users) {
+            axios.post('/new_game', { body: 'create', users: users });
         },
         showModal() {
             this.$bvModal.show('modalFindGame');
