@@ -58,6 +58,10 @@ class Game extends Model
 
         Log::channel('daily')->log('info', 'Game newRound()', [$round]);
 
+        if ($data['body'] === 'x') {
+            return $this->completeRound($round, self::ROLES['player_2']);
+        }
+
         return $round;
     }
 
@@ -73,38 +77,54 @@ class Game extends Model
 
         Log::channel('daily')->log('info', 'Game updateRound()', [$round]);
 
-        return $round;
+        if ($data['body'] === 'x') {
+            return $this->completeRound($round, self::ROLES['player_1']);
+        }
+
+        return $this->completeRound($round);
     }
 
-    private function completeRound($round)
+    private function completeRound($round, $winner = false)
     {
-        $round->guess_number = rand($this->minNumber, $this->maxNumber);
-        $round->save();
-
-        $number_player_1 = json_decode($round->player_1);
-        $number_player_2 = json_decode($round->player_2);
-
-        $diff_player_1 = abs($round->guess_number - intval($number_player_1->number));
-        $diff_player_2 = abs($round->guess_number - intval($number_player_2->number));
-
-        $none = abs($diff_player_1 - $diff_player_2);
-
-        if ($none === 0) {
-            $round->winner = self::ROLES['none'];
+        if ($winner && $winner === self::ROLES['player_1']) {
+            $round->winner = self::ROLES['player_1'];
             $round->save();
-        } else {
-            $favorit = min($diff_player_1, $diff_player_2);
+        }
 
-            switch ($favorit) {
-                case $diff_player_1:
-                    $round->winner = self::ROLES['player_1'];
-                    $round->save();
-                    break;
+        if ($winner && $winner === self::ROLES['player_2']) {
+            $round->winner = self::ROLES['player_2'];
+            $round->save();
+        }
 
-                case $diff_player_2:
-                    $round->winner = self::ROLES['player_2'];
-                    $round->save();
-                    break;
+        if (!$winner) {
+            $round->guess_number = rand($this->minNumber, $this->maxNumber);
+            $round->save();
+
+            $number_player_1 = json_decode($round->player_1);
+            $number_player_2 = json_decode($round->player_2);
+
+            $diff_player_1 = abs($round->guess_number - intval($number_player_1->number));
+            $diff_player_2 = abs($round->guess_number - intval($number_player_2->number));
+
+            $none = abs($diff_player_1 - $diff_player_2);
+
+            if ($none === 0) {
+                $round->winner = self::ROLES['none'];
+                $round->save();
+            } else {
+                $favorit = min($diff_player_1, $diff_player_2);
+
+                switch ($favorit) {
+                    case $diff_player_1:
+                        $round->winner = self::ROLES['player_1'];
+                        $round->save();
+                        break;
+
+                    case $diff_player_2:
+                        $round->winner = self::ROLES['player_2'];
+                        $round->save();
+                        break;
+                }
             }
         }
 
@@ -212,8 +232,6 @@ class Game extends Model
             return $this->newRound($this->current_round, $data, $player);
         }
 
-        $round = $this->updateRound($round, $data, $player);
-
-        return $this->completeRound($round);
+        return $this->updateRound($round, $data, $player);
     }
 }

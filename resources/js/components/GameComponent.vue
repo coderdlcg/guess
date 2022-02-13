@@ -35,7 +35,7 @@
                                         <td>{{ round['guess_number'] }}</td>
                                     </template>
                                     <template v-else>
-                                        <td>??</td>
+                                        <td>-</td>
                                     </template>
 
                                     <template v-if="round['player_1']">
@@ -44,7 +44,7 @@
                                         </td>
                                     </template>
                                     <template v-else>
-                                        <td>??</td>
+                                        <td>-</td>
                                     </template>
 
                                     <template v-if="round['player_2']">
@@ -53,17 +53,17 @@
                                         </td>
                                     </template>
                                     <template v-else>
-                                        <td>??</td>
+                                        <td>-</td>
                                     </template>
                                 </tr>
                             </template>
                         </tbody>
                     </table>
                 </div>
-                <div class="message">
-                    <span class="d-inline-block">{{ message }}</span>
-                </div>
                 <div class="footer">
+                    <div class="timer" :class="{inactive: isActiveRightPlayer}">
+                        <span class="time">{{ currentTime }}</span>
+                    </div>
                     <fieldset :disabled="disabled >= 1">
                         <div class="row">
                             <div class="col">
@@ -110,7 +110,6 @@ export default {
         'right_player',
         'player_1',
         'player_2',
-        'first_move',
         'rounds',
         'winner'
     ],
@@ -126,7 +125,10 @@ export default {
             isActiveLeftPlayer: false,
             isActiveRightPlayer: false,
             isGameOver: false,
-            modal_text: ''
+            modal_text: '',
+            limitTime: 20,
+            currentTime: null,
+            timer: null,
         }
     },
     computed: {
@@ -135,24 +137,26 @@ export default {
         }
     },
     mounted() {
-        if (this.left_player.id === this.first_move) {
-            this.isActiveLeftPlayer = true;
-            this.disabled = 0;
+        if (this.left_player.id === this.player_1.id) {
+            this.togglePLayer('left');
         } else {
-            this.isActiveRightPlayer = true;
-            this.disabled = 1;
+            this.togglePLayer('right');
         }
 
         let round = this.rounds.slice().pop();
-        if (round && JSON.parse(round['player_1']).user_id === this.left_player.id && round['guess_number'] === 0) {
-            this.isActiveLeftPlayer = false;
-            this.isActiveRightPlayer = true;
-            this.disabled = 1;
+
+        if (round
+            && JSON.parse(round['player_1']).user_id === this.left_player.id
+            && JSON.parse(round['player_1']).number !== 'x')
+        {
+            this.togglePLayer('right');
         }
-        if (round && JSON.parse(round['player_1']).user_id === this.right_player.id && round['guess_number'] === 0) {
-            this.isActiveLeftPlayer = true;
-            this.isActiveRightPlayer = false;
-            this.disabled = 0;
+
+        if (round
+            && JSON.parse(round['player_1']).user_id === this.right_player.id
+            && JSON.parse(round['player_1']).number !== 'x')
+        {
+            this.togglePLayer('left');
         }
 
         if (this.winner) {
@@ -171,7 +175,14 @@ export default {
             })
             .listen('MessageSend', ({message, round}) => {
                 if (round['winner'] > 0) {
-                    this.rounds.pop();
+                    if (message.body !== 'x') {
+                        this.rounds.pop();
+                    }
+
+                    if (message.body === 'x' && message.user_id === this.player_2.id) {
+                        this.rounds.pop();
+                    }
+
                     this.rounds.push(round);
                     this.leftPlayerNumber = '';
                     this.rightPlayerNumber = '';
@@ -180,18 +191,22 @@ export default {
                     this.rounds.push(round);
                 }
 
-                if (this.right_player.id === message.user_id) {
+                if (this.right_player.id === message.user_id && message.body !== 'x') {
                     this.rightPlayerNumber = message.body;
-                    this.leftPlayerNumber = '??'; //
-                    this.disabled = 0;
-                    this.isActiveLeftPlayer = true;
-                    this.isActiveRightPlayer = false;
-                } else {
+                    this.togglePLayer('left');
+                }
+
+                if (this.left_player.id === message.user_id && message.body !== 'x') {
                     this.leftPlayerNumber = message.body;
-                    this.rightPlayerNumber = '??'; //
-                    this.disabled = 1;
-                    this.isActiveLeftPlayer = false;
-                    this.isActiveRightPlayer = true;
+                    this.togglePLayer('right');
+                }
+
+                if (message.body === 'x') {
+                    if (this.left_player.id === this.player_2.id) {
+                        this.togglePLayer('right');
+                    } else {
+                        this.togglePLayer('left');
+                    }
                 }
             })
             .listen('GameOver', ({data}) => {
@@ -200,22 +215,58 @@ export default {
                 }
             })
     },
+    destroyed() {
+        this.stopTimer()
+    },
     methods: {
+        startTimer() {
+            this.currentTime = this.limitTime;
+            this.timer = setInterval(() => {
+                this.currentTime--
+            }, 1000)
+        },
+        stopTimer() {
+            clearTimeout(this.timer)
+        },
+        togglePLayer(player) {
+            if (player === 'left') {
+                this.leftPlayerNumber = '?';
+                this.disabled = 0;
+                this.isActiveLeftPlayer = true;
+                this.isActiveRightPlayer = false;
+            }
+
+            if (player === 'right') {
+                this.rightPlayerNumber = '?';
+                this.disabled = 1;
+                this.isActiveLeftPlayer = false;
+                this.isActiveRightPlayer = true;
+            }
+
+            if (player === 'none') {
+                this.disabled = 1;
+                this.isActiveLeftPlayer = false;
+                this.isActiveRightPlayer = false;
+                this.placeholder = '';
+                this.leftPlayerNumber = '';
+                this.rightPlayerNumber = '';
+            }
+
+            if (this.disabled === 0) {
+                this.startTimer()
+            }
+        },
         sendMessage() {
             if (this.inputNumber !== null && this.inputNumber >= 1 && this.inputNumber <= 20) {
+                this.stopTimer();
                 axios.post('/processing', { body: this.inputNumber, user_id: this.user.id, game_id: this.game.id });
                 this.leftPlayerNumber = this.inputNumber;
                 this.inputNumber = '';
             }
         },
         gameOver(winner) {
-            this.disabled = 1;
-            this.isActiveLeftPlayer = false;
-            this.isActiveRightPlayer = false;
+            this.togglePLayer('none');
             this.isGameOver = true;
-            this.placeholder = '';
-            this.leftPlayerNumber = '';
-            this.rightPlayerNumber = '';
 
             let text = '';
             if (winner !== 8) {
@@ -229,7 +280,6 @@ export default {
             }
             this.message = text;
             this.modal_text = text;
-            // здесь активировать модальное окно
             this.showModal()
         },
         leaveGame() {
@@ -239,6 +289,17 @@ export default {
         showModal() {
             this.$bvModal.show('modalLeaveGame');
         },
-    }
+    },
+    watch: {
+        currentTime(time) {
+            if (time === 0) {
+                this.stopTimer();
+
+                if (!this.isGameOver)  {
+                    axios.post('/processing', { body: 'x', user_id: this.user.id, game_id: this.game.id });
+                }
+            }
+        }
+    },
 }
 </script>
