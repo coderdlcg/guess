@@ -46,6 +46,9 @@ body, .min-h-screen {
     background-color: #d1e8e2;
     border-color: #d1e8e2;
 }
+.btn {
+    color: #ffffff;
+}
 .home-page {
     display: flex;
     align-items: center;
@@ -435,6 +438,14 @@ input::placeholder {
     height: 48px;
     border: none;
 }
+.timer {
+    font-size: 36px;
+    font-weight: 700;
+    color: #99afb3;
+}
+.timer.inactive .time {
+    opacity: 0;
+}
 [type='text']:focus, [type='email']:focus, [type='url']:focus, [type='password']:focus, [type='number']:focus, [type='date']:focus, [type='datetime-local']:focus, [type='month']:focus, [type='search']:focus, [type='tel']:focus, [type='time']:focus, [type='week']:focus, [multiple]:focus, textarea:focus, select:focus {
     outline: 2px solid transparent;
     outline-offset: 2px;
@@ -487,4 +498,16 @@ input::placeholder {
 }
 .history-page .table ::before, .history-page .table ::after {
     border-color: #ffffff0f !important;
+}
+.history-page .paginate .bg-white {
+    background-color: #edfffa !important;
+}
+.history-page .paginate .border {
+    border: 1px solid #b9d8d0 !important;
+}
+.history-page .paginate a {
+    color: #12b0d2;
+}
+.history-page .paginate a:hover {
+    color: #29d8ff;
 }
