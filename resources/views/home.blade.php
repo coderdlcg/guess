@@ -4,7 +4,9 @@
             <div class="h1">
                 <h1>Угадай число</h1>
             </div>
-            <find-game-component></find-game-component>
+
+            <a href="/find" class="btn btn-lg btn-primary btn-block btn-find" >Найти игру</a>
+
             <div class="list">
                 <a href="{{ route('history') }}" class="btn btn-lg btn-primary btn-block btn-list" type="submit">Журнал матчей</a>
             </div>

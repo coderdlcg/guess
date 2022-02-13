@@ -20,6 +20,16 @@ class PageController extends Controller
         return view('home');
     }
 
+    public function find(Request $request)
+    {
+        $auth_user = Auth::user();
+        if (!$auth_user) {
+            return redirect(route('login'));
+        }
+
+        return view('find', compact('auth_user'));
+    }
+
     public function game(Game $game)
     {
         $user = Auth::user();
@@ -30,7 +40,6 @@ class PageController extends Controller
         $users = $game->users()->select('id', 'name')->get();
         $player_1 = $game->users()->where('role', Game::ROLES['player_1'])->first();
         $player_2 = $game->users()->where('role', Game::ROLES['player_2'])->first();
-        $first_move = $users->min('id');
         $rounds = $game->rounds()->get()->all();
         $winner = 0;
 
@@ -53,7 +62,6 @@ class PageController extends Controller
             'right_player',
             'player_1',
             'player_2',
-            'first_move',
             'rounds',
             'winner',
         ]));
@@ -71,7 +79,8 @@ class PageController extends Controller
             ->join('users', 'users.id', '=', 'game_user.user_id')
             ->where('user_id', '!=',$user->id)
             ->select('games.id as game_id', 'winner', 'role', 'users.name as opponent_name', 'games.updated_at as date')
-            ->get();
+            ->orderByDesc('date')
+            ->paginate(10);
 
         return view('history', compact('user', 'games'));
     }
