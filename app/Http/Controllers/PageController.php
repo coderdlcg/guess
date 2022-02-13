@@ -40,7 +40,6 @@ class PageController extends Controller
         $users = $game->users()->select('id', 'name')->get();
         $player_1 = $game->users()->where('role', Game::ROLES['player_1'])->first();
         $player_2 = $game->users()->where('role', Game::ROLES['player_2'])->first();
-        $first_move = $users->min('id');
         $rounds = $game->rounds()->get()->all();
         $winner = 0;
 
@@ -63,7 +62,6 @@ class PageController extends Controller
             'right_player',
             'player_1',
             'player_2',
-            'first_move',
             'rounds',
             'winner',
         ]));
