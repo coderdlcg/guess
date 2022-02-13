@@ -79,7 +79,8 @@ class PageController extends Controller
             ->join('users', 'users.id', '=', 'game_user.user_id')
             ->where('user_id', '!=',$user->id)
             ->select('games.id as game_id', 'winner', 'role', 'users.name as opponent_name', 'games.updated_at as date')
-            ->get();
+            ->orderByDesc('date')
+            ->paginate(10);
 
         return view('history', compact('user', 'games'));
     }

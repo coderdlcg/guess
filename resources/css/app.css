@@ -499,3 +499,15 @@ input::placeholder {
 .history-page .table ::before, .history-page .table ::after {
     border-color: #ffffff0f !important;
 }
+.history-page .paginate .bg-white {
+    background-color: #edfffa !important;
+}
+.history-page .paginate .border {
+    border: 1px solid #b9d8d0 !important;
+}
+.history-page .paginate a {
+    color: #12b0d2;
+}
+.history-page .paginate a:hover {
+    color: #29d8ff;
+}

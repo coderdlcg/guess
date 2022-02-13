@@ -33,6 +33,9 @@
                     @endforeach
                     </tbody>
                 </table>
+                <div class="paginate">
+                    {{ $games->links() }}
+                </div>
             </div>
         </div>
         <div class="footer">
