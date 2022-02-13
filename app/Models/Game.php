@@ -144,27 +144,19 @@ class Game extends Model
     private function gameOver()
     {
         $rounds = $this->rounds()->select('winner')->get()->pluck('winner')->toArray();
-        $count_win_player_1 = 0;
-        $count_win_player_2 = 0;
+        $count_of_wins = array_count_values($rounds);
+        $count_of_wins_player_1 = $count_of_wins[self::ROLES['player_1']];
+        $count_of_wins_player_2 = $count_of_wins[self::ROLES['player_2']];
 
-        foreach ($rounds as $user) {
-            if ($user === self::ROLES['player_1']) {
-                $count_win_player_1++;
-            }
-            if ($user === self::ROLES['player_2']) {
-                $count_win_player_2++;
-            }
-        }
-
-        if ($count_win_player_1 > $count_win_player_2) {
+        if ($count_of_wins_player_1 > $count_of_wins_player_2) {
             $this->winner = self::ROLES['player_1'];
         }
 
-        if ($count_win_player_1 < $count_win_player_2) {
+        if ($count_of_wins_player_1 < $count_of_wins_player_2) {
             $this->winner = self::ROLES['player_2'];
         }
 
-        if ($count_win_player_1 === $count_win_player_2) {
+        if ($count_of_wins_player_1 === $count_of_wins_player_2) {
             $this->winner = self::ROLES['none'];
         }
 
