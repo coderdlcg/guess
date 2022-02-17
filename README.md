@@ -2,6 +2,36 @@
 
 version 0.2
 
+##Deployment local
+
+1) Установить локальный сервер OpenServer или Laragon
+2) ```git clone https://github.com/langitru/game_guess_number.git guess```
+3) ```cd guess && composer install```
+4) настроить домен guess.test
+5) создать БД (MySQL, MariaDB)
+6) копировать ```.env.example``` в ```.env```
+```
+   APP_URL=http://guess.test
+
+   DB_DATABASE=guess
+   DB_USERNAME=root
+   DB_PASSWORD=
+
+   BROADCAST_DRIVER=pusher
+
+   PUSHER_APP_ID=1336383
+   PUSHER_APP_KEY=4be12eed6f15340348ae
+   PUSHER_APP_SECRET=3b0d0c4e61fcdf92df08
+   PUSHER_APP_CLUSTER=ap3
+```
+7) ```php artisan key:generate```
+
+8) ```php artisan migrate```
+
+9) ```npm install && npm run dev```
+
+---
+
 ## Тестовое задание «Игра»
 
 Необходимо реализовать веб-приложение для игры
