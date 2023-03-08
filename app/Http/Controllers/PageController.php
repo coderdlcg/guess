@@ -10,17 +10,17 @@ use Illuminate\Support\Facades\DB;
 class PageController extends Controller
 {
 
-    public function index(Request $request)
+    public function index()
     {
         $user = Auth::user();
         if (!$user) {
             return redirect(route('login'));
         }
 
-        return view('home');
+        return view('home', compact('user'));
     }
 
-    public function find(Request $request)
+    public function find()
     {
         $auth_user = Auth::user();
         if (!$auth_user) {
@@ -74,44 +74,21 @@ class PageController extends Controller
             return redirect(route('login'));
         }
 
+        $myGamesId = DB::table('game_user')
+            ->where('user_id', '=', $user->id)
+            ->get()
+            ->pluck('game_id')
+            ->toArray();
+
         $games = DB::table('games')
+            ->whereIn('games.id', $myGamesId)
             ->join('game_user', 'games.id', '=', 'game_user.game_id')
+            ->where('user_id', '!=', $user->id)
             ->join('users', 'users.id', '=', 'game_user.user_id')
-            ->where('user_id', '!=',$user->id)
             ->select('games.id as game_id', 'winner', 'role', 'users.name as opponent_name', 'games.updated_at as date')
             ->orderByDesc('date')
             ->paginate(10);
 
         return view('history', compact('user', 'games'));
-    }
-
-    public function create()
-    {
-        //
-    }
-
-    public function store(Request $request)
-    {
-        //
-    }
-
-    public function show($id)
-    {
-        //
-    }
-
-    public function edit($id)
-    {
-        //
-    }
-
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    public function destroy($id)
-    {
-        //
     }
 }
