@@ -10,31 +10,31 @@ use Illuminate\Support\Facades\DB;
 class PageController extends Controller
 {
 
-    public function index()
+    public function home()
     {
         $user = Auth::user();
-        if (!$user) {
-            return redirect(route('login'));
-        }
 
         return view('home', compact('user'));
     }
 
     public function find()
     {
-        $auth_user = Auth::user();
-        if (!$auth_user) {
-            return redirect(route('login'));
-        }
+        $user = Auth::user();
 
-        return view('find', compact('auth_user'));
+        return view('find', compact('user'));
     }
 
     public function game(Game $game)
     {
+        $playersId = $game->users()->pluck('id')->toArray();
         $user = Auth::user();
-        if (!$user) {
-            return redirect(route('login'));
+
+        if (!in_array($user->id, $playersId)) {
+            abort(404);
+        }
+
+        if ($game->status === Game::STATUS['game_over']) {
+            return redirect()->route('home')->with('msg', 'Игра окончена!');
         }
 
         $users = $game->users()->select('id', 'name')->get();
@@ -49,10 +49,6 @@ class PageController extends Controller
             } else {
                 $right_player = $userItem;
             }
-        }
-
-        if ($game->status === Game::STATUS['game_over']) {
-            $winner = $game->whoIsWinner();
         }
 
         return view('game', compact([
@@ -70,9 +66,6 @@ class PageController extends Controller
     public function history()
     {
         $user = Auth::user();
-        if (!$user) {
-            return redirect(route('login'));
-        }
 
         $myGamesId = DB::table('game_user')
             ->where('user_id', '=', $user->id)

@@ -49,11 +49,22 @@ body, .min-h-screen {
 .btn {
     color: #ffffff;
 }
+.alert-dismissible {
+    padding-right: 1rem !important;
+}
 .home-page {
     display: flex;
     align-items: center;
-    padding-top: 100px;
-    padding-bottom: 40px;
+}
+
+.home-page .alert.alert-dismissible {
+    font-size: 1.5rem;
+    text-align: left;
+}
+
+.home-page .alert.alert-dismissible button.close {
+    font-size: 2rem;
+    margin-left: 1rem;
 }
 
 .home-page .block-game {
@@ -63,23 +74,31 @@ body, .min-h-screen {
     justify-content: space-between;
     text-align: center;
 
-    width: 480px;
-    height: 450px;
+    width: 360px;
+    height: 600px;
     padding: 35px;
     margin: auto;
 }
 
+.home-page .block-game .msg {
+    width: 100%;
+    height: 6rem;
+}
+.home-page .block-game .msg .alert {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: center;
+}
+
 .home-page h1 {
     position: relative;
-    width: 404px;
-    height: 75px;
 
     font-family: 'Roboto', sans-serif;
     font-style: normal;
     font-weight: bold;
-    font-size: 64px;
+    font-size: 4rem;
     line-height: 75px;
-    margin-bottom: 90px;
 
     color: #55585E;
 }
@@ -88,7 +107,11 @@ body, .min-h-screen {
     border-radius: 5px;
     background-color: #12B0D2 !important;
     border-color: #12B0D2 !important;
-    width: 374px;
+    width: 100%;
+}
+
+.home-page .block-game .exit {
+    width: 100%;
 }
 .btn-send_number, .btn-send_number:disabled {
     border-radius: 5px !important;
