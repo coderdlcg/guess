@@ -4,13 +4,13 @@
             <div class="h1">
                 <h1>Угадай число</h1>
             </div>
-
+            <div class="user-info">
+                Игрок: <b>{{ $user->name }}</b>
+            </div>
             <a href="/find" class="btn btn-lg btn-primary btn-block btn-find" >Найти игру</a>
-
             <div class="list">
                 <a href="{{ route('history') }}" class="btn btn-lg btn-primary btn-block btn-list" type="submit">Журнал матчей</a>
             </div>
-
             <div class="exit">
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
@@ -22,7 +22,6 @@
                     </a>
                 </form>
             </div>
-
         </div>
     </div>
 </x-app-layout>

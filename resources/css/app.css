@@ -389,7 +389,7 @@ input::placeholder {
     font-weight: 700;
 }
 .game-info .success, .history-page .success {
-    color: #68EC5C !important;
+    color: #1abb0b !important;
 }
 .game-info .failed, .history-page .failed {
     color: #F15454 !important;
@@ -470,16 +470,20 @@ input::placeholder {
     text-align: center;
     margin-bottom: 20px;
 }
+.history-page .user-info {
+    margin-bottom: 1rem;
+}
 .history-page .table thead th {
     font-weight: 700;
     border-bottom: none;
 }
 .history-page .table {
     color: #55585e;
-    background-color: #709C8C;
+    background-color: #709c8c52;
+    border-radius: 6px;
 }
 .history-page .table-striped tbody tr:nth-of-type(odd) {
-    background-color: #ADC8BE;
+    background-color: #caebdee8;
 }
 .history-page .footer {
     margin: 10vh;

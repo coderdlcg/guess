@@ -5,6 +5,11 @@
                 <h1>История матчей</h1>
             </div>
         </div>
+        <div class="user-info row">
+            <div class="offset-1 col-10">
+                Игрок: <b>{{ $user->name }}</b>
+            </div>
+        </div>
         <div class="history-games row">
             <div class="table-round offset-1 col-10">
                 <table class="table table-striped">
@@ -28,7 +33,6 @@
                             @else
                                 <td class="success">Победа</td>
                             @endif
-
                         </tr>
                     @endforeach
                     </tbody>
