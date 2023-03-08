@@ -15,14 +15,16 @@ use App\Http\Controllers\PageController;
 |
 */
 
-Route::get('/',            [PageController::class, 'index'])->name('home');
-Route::get('/find',        [PageController::class, 'find'])->name('find');
-
-Route::get('/game/{game}', [PageController::class, 'game']);
-Route::get('/history',     [PageController::class, 'history'])->name('history');
-
-Route::post('/processing', [GameController::class, 'processing']);
-Route::post('/find_game',  [GameController::class, 'findGame'])->name('find_game');
-Route::post('/new_game',   [GameController::class, 'newGame'])->name('new_game');
-
 require __DIR__.'/auth.php';
+
+Route::middleware('auth')->group(function () {
+    Route::get('/',            [PageController::class, 'home'])->name('home');
+    Route::get('/find',        [PageController::class, 'find'])->name('find');
+
+    Route::get('/game/{game}', [PageController::class, 'game']);
+    Route::get('/history',     [PageController::class, 'history'])->name('history');
+
+    Route::post('/processing', [GameController::class, 'processing']);
+    Route::post('/find_game',  [GameController::class, 'findGame'])->name('find_game');
+    Route::post('/new_game',   [GameController::class, 'newGame'])->name('new_game');
+});

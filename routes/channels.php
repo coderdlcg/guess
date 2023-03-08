@@ -18,7 +18,7 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 });
 
 Broadcast::channel('game.{game_id}', function ($user, $game_id) {
-    if($user->games->contains($game_id)){
+    if ($user->games->contains($game_id)) {
         return ['id' => $user->id, 'name' => $user->name] ;
     }
 });

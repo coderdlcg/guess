@@ -1,4 +1,4 @@
-<x-guest-layout>
+<x-app-layout>
     <x-auth-card>
         <x-slot name="logo" class="block-auth">
             <div class="log_reg">
@@ -69,4 +69,4 @@
             </div>
         </form>
     </x-auth-card>
-</x-guest-layout>
+</x-app-layout>
