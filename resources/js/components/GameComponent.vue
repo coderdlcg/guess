@@ -67,7 +67,7 @@
                     <fieldset :disabled="disabled >= 1">
                         <div class="row">
                             <div class="col">
-                                <input class="form-control input_number" min="1" max="20" type="number" :placeholder="placeholder"
+                                <input class="form-control input_number" min="1" max="20" type="number" autofocus :placeholder="placeholder"
                                        v-model.number="inputNumber"
                                        @keyup.enter="sendMessage">
                             </div>

@@ -106,7 +106,7 @@ class GameController extends Controller
                     // прикрепляем текущего польователя к игре (даем права доступа к созданной игре)
                     $this->game->users()->attach($user->id, ['role' => Game::ROLES['player_1'] ]);
 
-                    Log::channel('daily')->log('info', "user {$user->name} создал игру ({$this->game->name}) и ождает соперника ", [$this->game, $user]);
+                    Log::channel('daily')->log('info', "user {$user->name} создал игру ({$this->game->name}) и ожидает соперника ", [$this->game, $user]);
                 }
             }
 

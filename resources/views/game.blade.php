@@ -6,5 +6,6 @@
                     :player_2="{{$player_2}}"
                     :user="{{Auth::user()}}"
                     :rounds='@json($rounds)'
-                    :winner="{{$winner}}"></game-component>
+                    :winner="{{$winner}}">
+    </game-component>
 </x-app-layout>

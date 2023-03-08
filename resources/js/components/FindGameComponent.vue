@@ -13,7 +13,7 @@
 <script>
 export default {
     props: [
-        'auth_user'
+        'user'
     ],
     data() {
         return {
@@ -27,15 +27,11 @@ export default {
                 window.location.href = '/game/' + data.message.game_id;
             })
             .listen('FindGame', (data) => {
-                if (data.message.body === 'find' && (this.auth_user.id > data.message.user.id || this.auth_user.id < data.message.user.id)) {
-                    let users = [];
-                    users.push(this.auth_user);
-                    users.push(data.message.user);
-
-                    this.createGame(users);
+                if (data.message.body === 'find' && this.user.id !== data.message.user.id) {
+                    this.createGame([this.user, data.message.user]);
                 }
             });
-        this.findGame(this.auth_user);
+        this.findGame(this.user);
     },
     methods: {
         findGame(user) {
